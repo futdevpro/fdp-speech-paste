@@ -1,0 +1,4 @@
+{
+  "volume": 30,
+  "ai_model": "openai/whisper-large-v3-turbo"
+}

@@ -1,0 +1,19 @@
+{
+  "exec": "npm run nodemon-run",
+  "restartable": "rs",
+  "delay": "3000",
+  "ext": "py,json,tgz",
+  "verbose": false,
+  "legacyWatch": false,
+  "watch": [
+    "./src/*.py",
+    "main.py"
+  ],
+  "ignore": [
+    "./__pycache__/*",
+    "./local-models/*",
+    "./env/*",
+    "./desktop_app.py",
+    "./indicator.py"
+  ]
+}

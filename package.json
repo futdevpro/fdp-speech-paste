@@ -1,0 +1,31 @@
+{
+  "name": "fdp-speech-paste",
+  "version": "01.01.01",
+  "DyBu_settings": {
+    "packageType": "python-server"
+  },
+  "scripts": {
+    "prep": "pip install --upgrade transformers datasets[audio] accelerate flask werkzeug pydub pyaudio pynput pyperclip requests numpy simpleaudio pillow",
+
+    "start": "npm run prep && npm run desktop",
+
+    "start-server": "npm run prep && npm run nodemon-run",
+
+    "start-n-dev-server": "npm run prep && nodemon",
+
+    "build": "npm run clean && ng build --configuration production",
+
+    "build-n-test": "npm run prep && npm run build",
+    
+    "nodemon-run": "python main.py",
+    
+    "desktop": "python desktop_app.py",
+    
+    "desktop-start": "npm run prep && npm run desktop",
+    
+    "start-complete": "powershell -ExecutionPolicy Bypass -File start_complete_system.ps1",
+    
+    "start-all": "npm run prep && npm run start-complete"
+  }
+}
+

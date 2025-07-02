@@ -1,0 +1,68 @@
+# Audio directories
+uploads/
+processed/
+
+# Audio files
+*.webm
+*.mp4
+*.m4a
+*.aac
+*.ogg
+*.wma
+*.wmv
+*.flac
+*.alac
+*.aiff
+*.pcm
+*.raw
+*.opus
+*.amr
+*.mid
+*.midi
+*.wavpack
+*.ape
+*.tta
+*.ac3
+*.dts
+
+# Python
+__pycache__/
+**/__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Desktop app temporary files
+temp_audio_*.wav
+temp_audio_*.mp3
+
+# Test files
+test_*.wav
+test_*.mp3 
