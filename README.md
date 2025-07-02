@@ -7,6 +7,10 @@ This application allows you to convert speech to text and automatically paste it
   - Download from [python.org](https://www.python.org/downloads/)
   - During installation, check "Add Python to PATH"
 
+## Visual C++ Build Tools (PyAudio-hoz)
+1. Download Visual Studio Build Tools from [Microsoft](https://visualstudio.microsoft.com/downloads/)
+2. During installation, select the "C++ build tools" component
+
 ## Installation & Startup
 1. Download or clone this project.
 2. Double-click the `start service.bat` file in the project folder.
