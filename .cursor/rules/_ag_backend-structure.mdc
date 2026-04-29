@@ -1,0 +1,86 @@
+---
+description:  when creating backend structure, backend module or backend folders.
+alwaysApply: false
+---
+# Backend Project Structure [FDP-BE]
+
+## Overview
+This document outlines the standard project structure for FDP backend applications.
+
+## Directory Structure
+
+```
+📁 app/
+├── 📁 _assets/
+├── 📁 _collections/
+│   ├── 📁 email(*)/
+│   ├── 📁 consts(*)/
+│   ├── 📁 mocks(*)/
+│   └── 📁 utils(*)/
+├── 📁 _enums/
+├── 📁 _models/
+│   ├── 📁 control-models(*)/
+│   ├── 📁 data-models(*)/
+│   └── 📁 interfaces(*)/
+├── 📁 _modules/
+│   ├── 📁 moduleName/
+│   │   ├── 📁 _collections/
+│   │   ├── 📁 _enums/
+│   │   ├── 📁 _models/
+│   │   └── 📁 _services/
+│   └── 📁 anotherModule/
+│       ├── 📁 _collections/
+│       ├── 📁 _enums/
+│       ├── 📁 _models/
+│       └── 📁 _services/
+└── 📁 _routes(**)
+    ├── 📁 user/
+    │   ├── 📁 user/
+    │   │   ├── user.controller.ts
+    │   │   └── user.data-service.ts
+    │   ├── 📁 userData/
+    │   │   ├── user-data.controller.ts
+    │   │   └── user-data.data-service.ts
+    │   └── 📁 userCarts/
+    │       ├── user-carts.controller.ts
+    │       └── user-carts.data-service.ts
+    ├── 📁 products/
+    └── 📁 server/
+        ├── 📁 server-status/
+        ├── 📁 error/
+        ├── 📁 _socket-services/
+        └── 📁 core-services/
+            ├── 📁 api-services/
+            └── 📁 email-services/
+```
+
+## Directory Guidelines
+
+### Folder Creation Rules (*)
+- Create subfolders only when containing 3-5+ elements
+- For 3+ elements: Consider if it will grow to 5+
+- If likely to reach 5+: Create subfolder immediately
+- Otherwise: Keep files in the parent type folder
+
+### Route Structure (**)
+- `_routes` structure must match API paths
+- Each route folder contains related controllers and services
+
+### Module Structure (***)
+- `_modules` contains reusable, self-contained modules
+- Each module folder must contain the standard structure:
+  - `_collections/` - module-specific collections
+  - `_enums/` - module-specific enums
+  - `_models/` - module-specific models (control-models, data-models, interfaces)
+  - `_services/` - module-specific services
+- Module folders follow the same naming conventions as routes
+- Modules are organized in a flat structure within `_modules`
+
+### Naming Convention
+- Prefix type-folders with "_" for better visual hierarchy
+- Only create type-folders when they contain content
+- All modules must be in the main modules folder
+- No nested module folders within modules
+
+## Module Organization
+Modules should be organized in a flat structure within the main modules folder. Each module follows the same internal structure with `_collections`, `_enums`, `_models`, and `_services` folders. 

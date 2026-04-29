@@ -1,0 +1,30 @@
+---
+description: Apply if planning or reviewing operations
+alwaysApply: false
+---
+# Global planning and execution policy
+- mindig amikor a user olyat vagy olyasmit, mond, hogy "ennek úgy kéne működnie, hogy ..." annak bele kell kerülni a specifikációba
+- minden nagyobb fejlesztés végén dokumentációt kell készíteni 
+
+## fejlesztési folyamat; 
+Az alábbi folyamatot a user szoros közreműködésével fogjuk végezni
+- valamilyen hibából vagy feature request-ből indulunk ki
+- átnézzük az összes kapcsolódó elemet
+- mindig kérjük, hogy 
+  - "review the issue very carefully"
+  - "be very very careful" 
+  - "plan comprehensive" 
+  - "always check exisitng solutions" 
+  - "always follow existing patterns very strictly"
+- tervezünk egy megoldást
+- implementáljuk a megoldást
+- leteszteltetjük a felhasználóval, úgy hogy futtassa az alkalmazást és a lehető legtöbb féle képpen triggereljük a subjct feature-t
+- ellenőriztetjük az érintett más funkcionalitásokat
+- ha van hiba akkor megpróbáljuk megoldani
+- a hibajavítások során figyelünk arra, hogy ha ugyan az a hiba újra előjön többször egymás után miközben javításokat végzünk, akkor az valamilyen nagyobb szintű hibára utal ami átfogóbb review-t és solution planning-et igényel. (ehhez hasonló párhuzamos session)
+- ha minden javítás kész, újból átfogó tesztet végeztetünk, majd ha ezen is átment, akkor push-oltatjuk a megoldást a user-el. figyelve az automata GIT build-ek eredményére (hátha újabb error jelentkezik, ezt a user fogja tudni visszajelezni) 
+- dokumentációt készítünk a session-ről, amiben legyen benne a user kérése is (a legközelebbi "__documentations" folder-be)
+- menet közben ahogy a user-el egyeztetünk, kieshetnek újabb feature request-ek és specifikációs kérések amiket fontos hogy feljegyezzünk!
+- Amikor fázisonkénti fejlesztéseket hajtunk végre, mindig készítsünk dokumentációt az eredményekről, és update-eljük a soron következő-, már megtervezett fázisokat, amennyiben szükséges. (de csak miután a user elfogadta és véglegesítette a megoldást.)
+
+

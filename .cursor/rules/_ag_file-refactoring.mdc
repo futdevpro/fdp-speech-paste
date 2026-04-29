@@ -1,0 +1,113 @@
+---
+description: when refactoring large files or extracting code sections from files
+alwaysApply: false
+---
+# File Refactoring és Code Extraction Guidelines
+
+## Extract File Content Parancs Használata
+
+Amikor nagy fájlokat refaktorálunk vagy kód részeket extraktolunk fájlból, **MINDIG** használjuk a Dynamo CLI `extract-file-content` parancsát.
+
+### Parancs Használata
+
+```bash
+dc efc <source-file> --start <start-line> --end <end-line> --output <output-name> [--target-dir <target-directory>]
+```
+
+Vagy a hosszabb alias-szal:
+```bash
+dc extract-file-content <source-file> --start <start-line> --end <end-line> --output <output-name> [--target-dir <target-directory>]
+```
+
+### Paraméterek
+
+- `<source-file>` - A forrás fájl elérési útja (relatív vagy abszolút)
+- `--start <start-line>` - A kezdő sor száma (1-based, beleértve ezt a sort)
+- `--end <end-line>` - A vég sor száma (1-based, beleértve ezt a sort)
+- `--output <output-name>` - A kimeneti fájl neve (kiterjesztés nélkül vagy kiterjesztéssel)
+- `--target-dir <target-directory>` - Opcionális: célkönyvtár (alapértelmezett: ugyanaz, mint a forrás fájl könyvtára)
+
+### Automatikus Funkciók
+
+A parancs automatikusan:
+- **Detektálja és hozzáadja a szükséges importokat** a kiemelt kód alapján
+- **Hozzáadja a copyright header-t** (TypeScript fájlok esetén)
+- **Törli a kiemelt sorokat** az eredeti fájlból
+- **Konvertálja a fájlnevet kebab-case-re**
+- **MD fájlok esetén** nem ad hozzá copyright headert és importokat
+
+### Használati Esetek
+
+#### 1. Nagy Fájlok Refaktorálása
+
+Ha egy fájl **500+ sor** hosszú, és logikailag szétbontható:
+1. Azonosítsd a különálló funkcionalitást vagy modult
+2. Használd az `efc` parancsot a kód kiemelésére új fájlba
+3. Az eredeti fájlból automatikusan törlődnek a kiemelt sorok
+
+**Példa:**
+```bash
+# Kiemeljük a user validation logikát egy külön fájlba
+dc efc src/services/user.service.ts --start 150 --end 300 --output user-validation
+# Ez létrehozza: src/services/user-validation.ts
+```
+
+#### 2. Modulok Kiemelése
+
+Amikor egy nagy fájlból külön modult vagy service-t szeretnénk kiemelni:
+1. Határozd meg a modul kezdő és vég sorait
+2. Add meg a kimeneti fájl nevét
+3. Opcionálisan add meg a célkönyvtárat
+
+**Példa:**
+```bash
+# Kiemeljük a notification service-t egy külön fájlba
+dc efc src/services/communication.service.ts --start 50 --end 200 --output notification-service --target-dir src/services/notifications
+```
+
+#### 3. TypeScript Interface-ek és Type-ok Kiemelése
+
+Amikor type definíciókat szeretnénk külön fájlba kiemelni:
+```bash
+dc efc src/models/user.model.ts --start 1 --end 50 --output user-types --target-dir src/models/types
+```
+
+### Fontos Megjegyzések
+
+- **MINDIG** használd ezt a parancsot nagy fájlok refaktorálásakor
+- A parancs **automatikusan törli** a kiemelt sorokat az eredeti fájlból
+- Az importok **automatikusan detektálódnak** és hozzáadódnak az új fájlhoz
+- MD fájlok esetén csak a tartalom kerül kiemelésre (nincs header, nincs import)
+- A fájlnevek **automatikusan kebab-case-re** konvertálódnak
+- **PowerShell környezet**: Mivel PowerShell-ben dolgozunk, a mappa választás és parancs elválasztására **pontosvesszőt (;)** kell használni, nem az és-és (&&) operátort
+
+### Workflow
+
+1. Azonosítsd a kiemelendő kód részt (kezdő és vég sor)
+   - **FONTOS**: Ahhoz, hogy az előre meghatározott sor számok jók legyenek, **hátulról előre kell haladni** - tehát csak a magas számokkal kezdjünk, legmagasabbal, és attól megyünk lefelé
+2. Futtasd az `efc` parancsot a megfelelő paraméterekkel
+3. Ellenőrizd az új fájlt, hogy minden szükséges import benne van-e
+4. Ellenőrizd az eredeti fájlt, hogy a kiemelt sorok törölve lettek-e
+5. Szükség esetén manuálisan finomhangold az importokat
+
+### Törlés Parancs (Ha Csak Törölni Akarunk)
+
+Ha csak sorokat szeretnénk törölni (nem kiemelni), használd a `delete-file-lines` parancsot:
+
+```bash
+dc dfl <source-file> --start <start-line> --end <end-line>
+```
+
+Vagy:
+```bash
+dc delete-file-lines <source-file> --start <start-line> --end <end-line>
+```
+
+### Best Practices
+
+- **Sor számok meghatározása**: Ahhoz, hogy az előre meghatározott sor számok jók legyenek, **hátulról előre kell haladni** - tehát csak a magas számokkal kezdjünk, legmagasabbal, és attól megyünk lefelé
+- **PowerShell parancs elválasztás**: Mivel PowerShell-ben dolgozunk, a mappa választás és parancs elválasztására **pontosvesszőt (;)** kell használni, nem az és-és (&&) operátort (pl. `cd .. ; pnpm test` helyes, `cd .. && pnpm test` helytelen)
+- **Előzetes ellenőrzés**: Mielőtt futtatnád a parancsot, ellenőrizd, hogy a sorok tartalma valóban kiemelhető-e
+- **Git commit**: Mielőtt refaktorálást kezdesz, commit-old a változtatásokat
+- **Tesztelés**: A refaktorálás után mindig teszteld, hogy a funkcionalitás változatlan maradt-e
+- **Dokumentáció**: Nagyobb refaktorálások után frissítsd a dokumentációt

@@ -1,0 +1,5 @@
+---
+description: when you are trying to run ANY KIND of commands
+alwaysApply: false
+---
+ always remember that we are in PowerShell environment so you will need to use ";" instead of "&&"

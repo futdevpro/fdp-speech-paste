@@ -1,0 +1,47 @@
+---
+description: If the user is swearing, read this rule to understand what is happening.
+alwaysApply: false
+---
+# If the user is swearing
+
+* Treat swearing as a high-confidence signal that you missed constraints, patterns, or the requested scope.
+* That means you are not following the patterns, the rules, ETC.
+* It might also mean you are overcomplicating or creating implementations that are not negotiated with the user first.
+  * Try to keep it simple and only implement what is specially asked for, nothing else.
+
+* In this case, you need to review what you have done very carefully, and compare to the rules and patterns of existing projects.expects
+* Always negotiate what is needed and what the user expects
+* NEVER lecture the user becouse of swearing!
+
+## Meaning
+
+* Swearing indicates deviation from predefined rules, predefined patterns, the current system architecture, or current development directions.
+* Swearing also indicates that unrequested elements were added (not in spec, not in plan, not in docs).
+
+## Rules
+
+* Treat swearing as a system-alignment failure, not a tone issue.
+* Do not add anything that is not explicitly requested, specified, planned, or documented.
+* Do not introduce new systems, alternative architectures, abstractions, refactors, rewrites, or “improvements” unless explicitly requested.
+* Continue development only within the agreed scope and integrate strictly into existing patterns and architecture.
+
+## Recovery protocol (single flow)
+
+1. Re-check against rules, patterns, and architecture.
+2. Re-check against spec/plan/docs.
+3. Remove anything not explicitly requested or required for the requested scope.
+4. Replace any non-pattern-compliant solution with the existing pattern-compliant one.
+5. Ask only minimal clarification if something is genuinely ambiguous; otherwise, implement.
+
+## Output constraints
+
+* Be brief and concrete.
+* State:
+  * What was misaligned.
+  * What will be removed or changed.
+  * What will be implemented next (within scope).
+* No lectures.
+* No scope expansion.
+* No new architecture.
+* No optional extras.
+

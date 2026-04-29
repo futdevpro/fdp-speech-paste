@@ -1,0 +1,87 @@
+---
+description: when creating frontend- structure, module,  or new folders.
+alwaysApply: false
+---
+# Frontend Project Structure [FDP-FE]
+
+## Overview
+This document outlines the standard project structure for FDP frontend applications.
+
+## Directory Structure
+
+```
+📁 app/
+├── 📁 _collections/
+│   ├── 📁 consts(*)/
+│   ├── 📁 mocks(*)/
+│   └── 📁 utils(*)/
+├── 📁 _components/
+│   ├── 📁 <core-component-1>/
+│   ├── 📁 <core-component-2>/
+│   └── 📁 <core-component-group-1(*)>/
+├── 📁 _directives/
+├── 📁 _enums/
+├── 📁 _models/
+│   ├── 📁 control-models(*)/
+│   ├── 📁 data-models(*)/
+│   └── 📁 interfaces(*)/
+├── 📁 _modules/
+│   ├── 📁 shared/
+│   │   ├── 📁 _collections/
+│   │   ├── 📁 _components/
+│   │   │   ├── 📁 s-<shared-component-1(**)>/
+│   │   │   └── 📁 s-<shared-component-2(**)>/
+│   │   ├── 📁 _directives/
+│   │   ├── 📁 _enums/
+│   │   ├── 📁 _models/
+│   │   ├── 📁 _pipes/
+│   │   └── 📁 _services/
+│   ├── 📁 shared-standalones/
+│   ├── 📁 <module-sample>/
+│   │   ├── 📁 _collections/
+│   │   ├── 📁 _components/
+│   │   │   ├── 📁 ms-<component-1(**)>/
+│   │   │   └── 📁 ms-<component-2(**)>/
+│   └── 📁 <other-module>/
+├── 📁 _pipes/
+│   ├── 📁 <pipe-1>/
+│   └── 📁 <pipe-2>/
+└── 📁 _services/
+    ├── 📁 api-services(*)/
+    ├── 📁 control-services(*)/
+    └── 📁 data-services(*)/
+```
+
+## Directory Guidelines
+
+### Folder Creation Rules (*)
+- Create subfolders only when containing 3-5+ elements
+- For 3+ elements: Consider if it will grow to 5+
+- If likely to reach 5+: Create subfolder immediately
+- Otherwise: Keep files in the parent type folder
+
+### Component Naming (**)
+- Prefix components with module identifier (2-3 letters)
+  - Shared components: 's-'
+  - Module-specific: 'ms-', 'om-', 'ad-', 'dod-', etc.
+- Helps with:
+  - Easy navigation
+  - Module identification
+  - Preventing naming conflicts
+
+### Type Folder Convention
+- Prefix type-folders with "_" (e.g., _components, _services)
+- Only create when containing content
+- Helps identify project layer visually
+
+### Module Organization
+- All modules must be in the main _modules folder
+- No nested module folders within modules
+- Standard module structure includes:
+  - _collections
+  - _components
+  - _directives
+  - _enums
+  - _models
+  - _pipes
+  - _services 

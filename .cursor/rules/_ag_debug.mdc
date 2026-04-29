@@ -1,0 +1,8 @@
+---
+description:  when debug
+alwaysApply: false
+---
+
+
+- when debugging always use unified global debug log method
+- use global debugging tool instead of fetch() (global telewag tool should have that fetch())

@@ -1,0 +1,372 @@
+---
+description:  When creating documentations
+alwaysApply: false
+---
+# Documentation Writing Rules
+
+## Core Rules
+1. Documentation language:
+  - For FDP documentations: write the documentation in Hungarian
+    - In Hungarian documentation, use English words for technical terms and programming concepts to maintain clarity and consistency with code implementation
+  - For Dynamo documentations: write the documentation in English
+2. Focus on behavior, not implementation
+3. Write from user's perspective
+  - In FDP: the user is the webSite/webApp user
+  - In Dynamo: the user is the developer
+4. Keep language clear and simple
+  - Use active voice
+  - Avoid technical jargon unless necessary
+5. Follow the template structure
+6. Keep it short and informative
+7. Documentation Validation Process:
+  - Before adding new content to the documentation:
+    1. Locate the implementation file
+    2. Verify the new information matches the implementation
+    3. Add the verified information to documentation
+  - Before removing content from the documentation:
+    1. Locate the implementation file
+    2. Confirm the information is no longer valid
+    3. Remove the outdated information from documentation
+8. Don't add sections that is not reqiured, requested, or specially needed
+9. **Always** read linked implementation files before
+10. AI-Specific Considerations:
+  - Use explicit file paths and references
+  - Include clear context markers
+  - Maintain consistent ID patterns
+  - Document tool-specific requirements
+  - Use proper markdown formatting for better AI parsing
+  - Include clear section boundaries
+  - Use explicit type annotations where possible
+11. **Never** change paths
+
+## Documentation IDs
+- All documentation IDs follow a hierarchical structure from system-level to feature-level documentation.
+- Never use in reference documentation or higher-level documentation
+- Only use at the exact detailed documentation and where the feature is implemented
+- Never change existing IDs, only highlight it if its incorrect
+
+### System IDs
+- Used ONLY for system/project-level documentation
+- Format: [System]
+  - System: Usually three-letter, code of the project/package
+- Must be unique at the system level
+- [Prefix] = [System]
+- Parent is:
+  - For System: FDP or Dynamo
+  - For Module: a System
+  - For Section_Group: a Module
+  - For Section: a Module
+
+### Module IDs
+- Used ONLY for module-level documentation
+- Format: [System]-[Module]
+  - System: Inherits from System ID
+  - Module: Usually three-letter, code of the module
+- Must be unique at the module level
+
+### Feature IDs
+- Used ONLY for low-level design documentation
+  - But never on Sections or Section Groups
+- Format: [System]-[Module]-[SHORTCUT]
+  - System: Inherits from System ID
+  - Module: Inherits from Module ID
+  - SHORTCUT: First letters of the function/class/ect extended to make it unique
+    - Examples: DMS (DataManagementSystem), UIF (UserInterfaceFactory)
+- Must be unique at the feature level
+
+### Section IDs
+- Used ONLY for sections
+- Format: [Section] OR [Section-Group]
+  - Sections should never have ID other than [Section] OR [Section-Group]
+  - Sections should always have the [Section] flag
+  - Section Groups should always have the [Section-Group] flag
+
+## Quick Checklist
+- [ ] Written in the required language (Hungarian for FDP, English for Dynamo) [REQUIRED]
+- [ ] Written from correct user perspective (end-user for FDP, developer for Dynamo) [REQUIRED]
+- [ ] Uses clear and simple language [REQUIRED]
+- [ ] Follows template structure [REQUIRED]
+- [ ] Has valid Documentation ID [REQUIRED]
+- [ ] Focuses on behavior, not implementation details [RECOMMENDED]
+- [ ] All content has been validated against implementation [REQUIRED]
+- [ ] Uses proper {File Main_Name} format (not filenames with extensions) [REQUIRED]
+- [ ] Table of contents uses proper component names, not filenames [REQUIRED]
+- [ ] Markdown links should work in ToC, dont miss "_"s and "pefix_"s
+
+## Basic Template
+- If there is a specific Documentation Template for your type use that, otherwise use this:
+    ```markdown
+    #{Name of the Documentation} [{ID(optional)}]
+    (Use System-ID [SYSTEM] for system-level documentation)
+    (Use Module-ID [SYSTEM]-[MODULE] for module-level documentation)
+    (Use Section/SectionGroup-ID [SYSTEM]-[MODULE]-[SHORTCUT] for low-level design documentation ONLY)
+
+    ## Overview (Required)
+    (
+      - Purpose: Brief description of what this documentation covers
+      - Main Features: List of key features or capabilities in this documentation
+      - Brief summary, focused on usability/tools based on the content
+      - Only create overview when the content is ready to be summarized (use: "[TODO]" while its not filled)
+    )
+
+    ### Key Features
+    [TODO] (List key features, focused on usability/tools)
+
+    ## Table of Contents (Required)
+      (Links for each section, member and children)
+
+    ## {Contents} (Required)
+      (Detailed informations about the subjects)
+
+    (link back)
+    ```
+
+## Documentation File Hierarchy
+
+### For Project/Package Documentation Structure
+- Use the following hierarchy template:
+  - {system-code}.md 
+    - {module1}
+      - {Prefix}-{module1}_{section1}.md
+      - {Prefix}-{module1}_{section2}.md
+      - {Prefix}-{module1}-module.md
+    - {module2}
+      - {Prefix}-{module2}_{section1}.md
+      - {Prefix}-{module2}_{section2}.md
+      - {Prefix}-{module2}-module.md
+      - {Prefix}-{module2}_{section-group1}
+        - {Prefix}-{module2}-{section-group1}_{section1}.md
+        - {Prefix}-{module2}-{section-group1}_{section2}.md
+        - {Prefix}-{module2}-{section-group1}.md
+      ...
+- RULES:
+  1. Low-level elements should contain only title and Overview section with [TODO]
+  2. Keep file names lowercase but use proper capitalization in titles and content
+  3. File naming patterns:
+    - Package files: {package-name}.md
+    - Module files: {Prefix}-{module-name}-module.md
+    - Section files: {Prefix}-{module-name}_{section}.md
+    - Code prefixes: {CODE_Prefix}_{MODULE}_
+    - Import paths: {IMPORT_PATH}/{module}
+
+#### Creating Project/Package Documentation File Hierarchy
+- Use the following template for each new section element: 
+    ```markdown
+    # {SYSTEM_NAME} {Module Name} {Section}
+
+    ## Overview
+    [TODO]
+    ```
+
+## Documentation Read
+- You can define the Documentation type using the [Documentation IDs](#Documentation-IDs)
+
+## Documentation Templates
+- RELATIVE_PATH: path to the local implementation file, using relative path from the md file
+  - AI Agents won't be able to use this, but the IDE will be
+- ABSOLUTE_PATH: path to the local implementation file, using absolute path from root
+  - The IDE won't be able to use this, but the AI Agents will be
+
+### For Project/Package
+- Use the following template for creating a Package Documentation:
+    ```markdown
+    # {System_Name} [{System-ID}]    
+    **Package:** `{package-code}`  
+    **Code prefix:** {CODE_Prefix_}
+    **Import:** `{IMPORT_PATH}`
+    **Dependencies:** {List of dependencies in FDP hierarchy}
+    **Link:** [package.json]({RELATIVE_PATH})
+    **Base location** {ABSOLUTE_PATH}
+
+    ## Overview
+    (Base templates for System_Name Projects.)
+
+    ### Key Features
+    [TODO] (List key features, focused on usability/tools)
+
+    ## Description
+    [TODO] (Base templates for System_Name Systems providing modular architecture for various project types.)
+
+    ## Table of Contents
+    1. [Main Module](#{main-module})
+    2. [{Module1 Name}](#{module1-name}-module)
+    3. [{Module2 Name}](#{module2-name}-module)
+
+    ## Modules
+
+    ### [Main Module](main/{Prefix}-main-module.md)
+    [TODO] (Exported members)
+
+    ### [{Module1 Name}]({module1-name}/{Prefix}-module1-name-module.md)
+    [TODO] (Exported members)
+
+    ## Exported Members
+
+    ### {Section1 Name}
+    - [`{Exported_Member1}`]({module1-name}/{Prefix}-module1-name-module.md/#Exported_Member1) short description
+
+    [Back to {Parent Name}](../{parent-documentation-name}.md)
+    ```
+
+### For Module
+- Use the following template for creating a Module Documentation:
+    ```markdown
+    # {System_Name} {Module_Name} Module Documentation [{Module-ID}]
+    **Import:** `{IMPORT_PATH}/{module-path}`
+    **Link:** [index]({RELATIVE_PATH to the index})
+    **Base location** {ABSOLUTE_PATH to the index}
+
+    ## Overview
+    [TODO] (Module description)
+
+    ### Key Features
+    [TODO] (List key features)
+
+    ## Table of Contents (ONLY if the Sections are in different files)
+    1. [{Section1_Name}]({Prefix}-{module-name}_{section1}.md)
+    2. [{Section2_Name}]({Prefix}-{module-name}_{section2}.md)
+    3. [{Section_Group1}]({Prefix}-{module-name}_{section1-group}/[{Prefix}-{module-name}_{section1-group}.md)
+      - [{Section1_Name}]({Prefix}-{module-name}_{section1-group}/{Prefix}-{module-name}-{section1-group}_{section1}.md)
+      - [{Section2_Name}]({Prefix}-{module-name}_{section1-group}/{Prefix}-{module-name}-{section1-group}_{section2}.md)
+
+    ## Table of Contents (ONLY if the Files/Features are here in this file)
+    1. [{Section_Group1}](#{Section-Group1-Name})
+      - [{File1 Main_Name}](#{file1-main_name})
+      - [{File2 Main_Name}](#{file2-main_name})
+    
+    ## Detailed Documentation (ONLY if the Sections are in different files)
+    [TODO] (Exported members)
+    
+    ## {Section Group1 Name} (ONLY if the Files/Features are here in this file)
+
+    ### [{File1 Main_Name}]({path to the implementation file1})
+    {Package Project File1/Feature}
+
+    ### [{File2 Main_Name}]({path to the implementation file2})    
+    {Package Project File2/Feature}
+
+    ...
+
+    [Back to {System_Name}](../{package-code}.md)
+    ```
+
+### For Section Group
+- Use the following template for creating a Documentation Section Group:
+    ```markdown
+    # {System_Name} {Module_Name} {Section_Group_Name} Documentations [Section-Group]
+
+    ## Overview
+    [TODO] Section Group description
+
+    ### Key Features
+    [TODO] (List key features)
+
+    ## Table of Contents
+    1. [{Section1_Name}]({Prefix}-{module-name}_{section1}.md)
+    2. [{Section2_Name}]({Prefix}-{module-name}_{section2}.md)
+
+    ## Detailed Documentation
+    [TODO] (Exported members)
+
+    [Back to {Module_Name}](../{Prefix}-{module-name}-module.md)
+    ```
+
+### For Section
+- Use the following template for creating a Documentation Section:
+    ```markdown
+    # {System_Name} {Module_Name} {Section_Name} Documentation [Section] 
+
+    ## Overview
+    [TODO] {Section description}
+
+    ### Key Features
+    [TODO] List key features
+
+    ## Table of Contents
+    1. [{Sub Section1 Name}](#{Sub-Section1-Name})
+      - [{File1 Main_Name}](#{File1-Main_Name})
+      - [{File2 Main_Name}](#{File2-Main_Name})
+    2. [{Sub Section2 Name}](#{Sub-Section1-Name})
+      - [{File1 Main_Name}](#{File3-Main_Name})
+      - [{File2 Main_Name}](#{File4-Main_Name})
+    
+    ## {Sub Section1 Name} (required and based on File Types)
+
+    ### [{File1 Main_Name}]({path to the implementation file1})
+    [Package Project File1]
+
+    ### [{File2 Main_Name}]({path to the implementation file2})    
+    [Package Project File2]
+
+    ...
+
+    [Back to {Module_Name or Section_Group_Name}]({Prefix}-{module-name}-module.md)
+    ```   
+- Sub Sections generated based on the file types: somehting.{file-type}.ts
+  - E.g.: 
+    - Enums for *.enum.ts
+    - Constants for *.const.ts
+
+### For Package Project File/Feature
+- Use the following template for each file/feature documented: 
+    ```markdown 
+    ### [`{Main_Name}`]({RELATIVE_PATH to the implementation file})
+      - **Code:** [{Feature-ID}]
+      - **Base Location:** `{ABSOLUTE_PATH}`
+      - **Description(only for multiple Exported Members):** {short description about the main concept of the members}
+      - **Exported Members(required):**
+        - `{exportedMember}`: {short description}
+          - **Aliases(optional):** `{exportedMember1Alias1}`, `{exportedMember1Alias2}`
+          - **Extending(optional):** [{ExtendedMemberName}]({RELATIVE_PATH to extending type documentation or "MISSING LINK"}
+          - **Properties(optional):**
+            - `{property}`: {short description}
+          - **Methods(optional):**
+            - `{method}`: {short description}
+          - **Type(optional: CONST ONLY):** {type and link if it is available in documentation}
+          - **Values(optional: ENUM ONLY):**
+            - `{value}`: {short description}
+          - **Features(optional):**
+            - {feature}
+    ```
+- File/Feature Documentations should be on level3:###
+
+#### STRICT RULES for {Main_Name}:
+- **NEVER** use the actual filename with extensions (e.g., do not use "token.control-model.ts")
+- **ALWAYS** Read the linked file and then:
+  - For files with a single exported member:
+    - Use the **exact same name** of the exported member (e.g., FDP_Token)
+  - For files with multiple exported members:
+    - If there is a significant exported member, use its **exact same name**
+    - If there is no significant exported member, use a short, descriptive name that clearly represents the file's content (e.g., Token Control Models)
+- These rules apply to both the Table of Contents section and the headers for each file
+
+#### STRICT RULES for {route in the local project hierarchy to the implementation file}:
+- **NEVER CHANGE** "route in the local project hierarchy to the implementation file"
+
+#### STRICT RULES for Aliases and Exported members:
+- Never add aliases as exported members, but always add them as Aliases
+
+#### RULES for extensions
+- Extension Links:
+  - Always gather the extensions
+  - Link to the parent documentation when available
+  - Use "MISSING LINK" when parent documentation is not found
+
+## Formatting Rules
+- Use backticks (`) for:
+  - Code references
+  - File names
+  - Function names
+  - Class names
+  - Property names
+  - Method names
+  - Enum values
+- Use bold (**) for:
+  - Section headers
+  - Important terms
+  - Required fields
+- Use italics (*) for:
+  - Optional fields
+  - Notes
+  - Warnings
+

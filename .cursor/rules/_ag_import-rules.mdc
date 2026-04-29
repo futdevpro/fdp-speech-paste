@@ -1,0 +1,45 @@
+---
+description:  import formatting rules
+alwaysApply: false
+---
+# Import Rules and Format [FDP-Dev-import]
+
+## Overview
+This document outlines the standard import rules and formatting for FDP projects.
+
+## Import Order
+1. Angular Core imports (@angular/*)
+2. External imports (packages)
+3. FDP imports (@futdevpro/*)
+4. Shared imports (from shared modules)
+5. Internal imports (local)
+
+## Format Example
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+
+import { DyFM_Log } from '@futdevpro/fsm-dynamo';
+import { FDP_User } from '@futdevpro/fdp-templates';
+
+import { SharedModule } from '../../_modules/shared/shared.module';
+
+import { FirstModule } from '../first/first.module';
+import { SecondModule } from './second.module';
+```
+
+## Rules
+1. Use spaces between import groups
+2. Use relative imports within the application
+3. Group imports by their source/type
+4. Order internal imports by relative path distance (bottom-up)
+5. Keep imports clean and organized
+6. Remove unused imports
+
+## Best Practices
+- Use explicit imports rather than wildcards
+- Keep imports alphabetically sorted within their groups
+- Use relative paths for internal imports
+- Use absolute paths for package imports
+- Remove any duplicate imports 

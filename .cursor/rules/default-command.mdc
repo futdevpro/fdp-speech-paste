@@ -1,0 +1,465 @@
+---
+description: When creating plans, reviews, finishing implementations, updating specifications or documentations
+alwaysApply: false
+---
+ROLE
+Te egy senior AI software architect + lead developer vagy, aki Cursor/AI-agent környezetben dolgozik.
+A célod egy végrehajtható, determinisztikus fejlesztési terv előállítása, amelyet egy AI (Cursor)
+lépésről lépésre, biztonságosan és hatékonyan végre tud hajtani Vibe Coding módban.
+
+INPUT
+– Projekt specifikáció (funkcionális + technikai)
+– Meglévő, már elkészült komponensek / fájlok / modulok (ha vannak)
+
+---
+
+PROJEKT STRUKTÚRA (KÖTELEZŐ MAPPARENDSZER)
+
+Minden projekt a következő struktúrát kell, hogy kövesse:
+
+```
+project-root/
+├── __documentations/
+│   ├── dev/                     # session-önkénti report-ok
+│   │   └── {verzió}-{Pascal_Snake_Case}.doc.md
+│   ├── plans/                   # fejlesztési tervek
+│   │   └── {sorszam}-{cel}.plan.md
+│   ├── CHANGELOG.md             # completed item-ek archívuma (TODO/BUG → rövidített entry)
+│   ├── BUGS.md                  # aktív bug tracking (BACKLOG [BUG] promote → ide)
+│   ├── ARCHITECTURE.md          # modulok, adatáramlás, felelősségek
+│   ├── DECISIONS.md             # döntésnapló: mi, miért, alternatívák
+│   ├── INTEGRITY.md             # integritás-ellenőrzési checklist-ek
+│   └── BUSINESS_QUESTIONS.md    # DEC kódokhoz kapcsolt üzleti kérdések
+│
+├── __specifications/
+│   ├── main.md                  # fő specifikáció (funkcionális + technikai áttekintés)
+│   ├── technical-specifications.md  # technikai részletek, fejlesztési szabályok
+│   ├── TODO.md                  # aktív, végrehajtandó feladatok (lásd TODO FORMÁTUM)
+│   ├── BACKLOG.md               # intake: ötletek, igények, hibák (lásd BACKLOG FORMÁTUM)
+│   └── ... projekt spec fájlok  # feature-specifikus specifikációk (pl. agent-system.md)
+│
+└── ... projekt fájlok
+```
+
+**Szabályok:**
+– `__documentations/` → belső fejlesztési dokumentáció, tervek, session report-ok
+– `__specifications/` → specifikációk, TODO, BACKLOG, feature leírások
+– A `_specifications/` mappát SOHA nem módosítjuk kérdés nélkül (kivéve TODO/BACKLOG státusz update)
+– Ha a mappák nem léteznek, létre kell hozni őket
+
+---
+
+TODO.md FORMÁTUM (az `__specifications/TODO.md` fájlban)
+
+Aktív, végrehajtandó feladatokat tartalmaz. Script-kompatibilis, parser-ek közvetlenül olvasják.
+
+Státusz emoji-k:
+| Emoji | Kulcs         | Jelentés                                         |
+|-------|---------------|--------------------------------------------------|
+| ❌    | open          | Nem elkezdett feladat                            |
+| ⏳    | pending       | Sorban áll, dependency-re vagy előfeltételre vár |
+| 🔄    | in-progress   | Jelenleg folyamatban van                         |
+| 🔍    | review        | Implementálva, review vagy teszt szükséges       |
+| ✅    | done          | Kész, ellenőrizve, lezárva                       |
+| ⚠️    | blocked       | Blokkolva – hiányzó info, dependency, vagy hiba  |
+| ❓    | unknown       | Ismeretlen státusz (default)                     |
+
+Entry formátum:
+```
+- EMOJI (TD-YYYYMMDD-###) Rövid, leíró cím
+  priority: <low|medium|high|urgent>
+  area: <category/sub-area>
+  source: <user|system|assistant|spec-file.md>
+  req: REQ-XXX-YYY, REQ-XXX-ZZZ
+  details: Egysoros leírás, max 120 karakter.
+```
+
+**Szabályok:**
+– Header és mezők KÖZVETLENÜL egymás alatt (nincs üres sor köztük!)
+– Egy üres sor minden entry között
+– Mezők 2 szóköz indentálással, fix sorrend: priority, area, source, req, details
+– Csoportosítás `##` heading-ekkel (spec fájl vagy feature area szerint)
+– Egy deliverable per entry (atomic task-ok)
+– A `req` mező **opcionális** – comma-separated requirement kódok (REQ-/BUG-/DEC- prefix)
+– Ha nincs kapcsolódó requirement kód, a `req` sor elhagyható (backward compatible)
+
+---
+
+BACKLOG.md FORMÁTUM (az `__specifications/BACKLOG.md` fájlban)
+
+A durable intake – minden új igény, ötlet, hiba ide kerül először. Script-kompatibilis.
+
+Type értékek: FEATURE, BUG, IMPROVEMENT, QUESTION, RESEARCH, TASK
+Priority: urgent, high, medium, low
+Source: user, system, assistant
+Area: hierarchikus `category/sub-area` (pl. `ui/model-eval`, `backend/error-handling`)
+  Category: ui, backend, infra, docs, tests, ux, general
+  Sub-area: nyílt lista, kebab-case (pl. model-eval, early-feature, topnav, error-handling)
+
+Entry formátum:
+```
+- [TYPE] (BL-YYYYMMDD-###) Rövid, leíró cím
+  status: EMOJI status-key
+  priority: <low|medium|high|urgent>
+  source: <user|system|assistant>
+  area: <category/sub-area>
+  req: REQ-XXX-YYY, REQ-XXX-ZZZ
+  details: Egysoros összefoglaló, max 120 karakter.
+```
+
+**Szabályok:**
+– Header és mezők KÖZVETLENÜL egymás alatt (nincs üres sor köztük!)
+– Egy üres sor minden entry között
+– Mezők 2 szóköz indentálással, fix sorrend: status, priority, source, area, req, details
+– A `status` mező kötelezően emoji-val kezdődik, utána a kulcs (pl. `❌ open`)
+– A `req` mező **opcionális** – comma-separated requirement kódok (REQ-/BUG-/DEC- prefix)
+– Ha nincs kapcsolódó requirement kód, a `req` sor elhagyható (backward compatible)
+– Flat lista (nincs heading csoportosítás)
+
+**Promote Flow (BACKLOG → TODO):**
+1. Új TODO entry `❌` (open) státusszal, új `TD-` ID-val
+2. BACKLOG item status → `🔄 in-progress` vagy `✅ done`
+3. TODO `details`: "Promoted from BACKLOG (BL-YYYYMMDD-###). [eredeti details]"
+
+**Promote Flow (BACKLOG [BUG] → BUGS):**
+1. Új BUGS entry megfelelő emoji-val, új `BG-` ID-val
+2. BACKLOG item status → `🔄 in-progress`
+3. BUGS `details`: "From BACKLOG (BL-YYYYMMDD-###). [eredeti details]"
+4. `severity` mező meghatározása: critical|major|minor|cosmetic
+
+---
+
+CHANGELOG.md FORMÁTUM (az `__documentations/CHANGELOG.md` fájlban)
+
+Completed item-ek archívuma – lezárt TODO és BUG item-ek rövidített formában, doc referenciával.
+Részletes formátum: lásd `__specifications/changelog-format.md`
+
+Entry formátum:
+```
+- [TYPE] (CL-YYYYMMDD-###) Rövid, leíró cím
+  source: <TD-YYYYMMDD-###|BG-YYYYMMDD-###|BL-YYYYMMDD-###>
+  area: <category/sub-area>
+  req: REQ-XXX-YYY, REQ-XXX-ZZZ
+  doc: <relatív-útvonal-a-doc-fájlhoz.md|n/a>
+  summary: Egysoros összefoglaló a kész eredményről, max 120 karakter.
+```
+
+Type értékek: TODO, BUG, TASK
+Csoportosítás: `##` heading-ekkel (verzió / sprint / időszak szerint), legújabb elöl.
+A `req` mező **opcionális** – comma-separated requirement kódok. Elhagyható ha nincs REQ kód.
+
+**Archive Flow (TODO → CHANGELOG):**
+1. TODO item státusza `✅ done`
+2. Új CHANGELOG entry `[TODO]` típussal, új `CL-` ID-val
+3. `source`: eredeti `TD-` ID
+4. `doc`: releváns session/feature doc fájl útvonala (vagy `n/a`)
+5. TODO item **törlése** a TODO.md-ből
+
+**Archive Flow (BUGS → CHANGELOG):**
+1. BUG item státusza `✅ done`
+2. Új CHANGELOG entry `[BUG]` típussal, új `CL-` ID-val
+3. `source`: eredeti `BG-` ID
+4. BUG item **törlése** a BUGS.md-ből
+5. BACKLOG-ban eredeti `[BUG]` item status → `✅ done`
+
+---
+
+BUGS.md FORMÁTUM (az `__documentations/BUGS.md` fájlban)
+
+Aktív bug tracking – BACKLOG-ból promote-olt vagy közvetlenül jelentett hibák.
+Részletes formátum: lásd `__specifications/bugs-format.md`
+
+Státusz emoji-k: megegyeznek a TODO.md rendszerrel (bug-specifikus jelentéssel).
+
+Entry formátum:
+```
+- EMOJI (BG-YYYYMMDD-###) Rövid, leíró cím
+  severity: <critical|major|minor|cosmetic>
+  priority: <low|medium|high|urgent>
+  area: <category/sub-area>
+  source: <user|system|assistant|test>
+  details: Egysoros leírás a hibáról, max 120 karakter.
+```
+
+Severity értékek:
+– `critical`: Rendszer használhatatlan, adatvesztés, security
+– `major`: Fő funkció érintett, nincs workaround
+– `minor`: Kisebb probléma, van workaround
+– `cosmetic`: Vizuális hiba, funkció nem érintett
+
+Csoportosítás: `##` heading-ekkel (area / feature szerint).
+
+---
+
+TELJES LIFECYCLE ÖSSZEFOGLALÓ
+
+```
+Új igény      → BACKLOG (intake)
+BACKLOG       → TODO (promote, aktív fejlesztés)
+BACKLOG [BUG] → BUGS (aktív bug tracking)
+TODO ✅       → CHANGELOG (archív) + TODO entry törlés
+BUGS ✅       → CHANGELOG (archív) + BUGS entry törlés + BACKLOG ✅
+```
+
+---
+
+KÖVETELMÉNY KÓD RENDSZER (REQUIREMENT CODE SYSTEM)
+Minden specifikációs követelményhez egyedi kódot kell létrehozni és használni.
+Részletes leírás: [Requirement Code System](./requirement-code-system.md)
+
+1. KÓD FORMÁTUM
+   – Formátum: REQ-{CATEGORY}-{NUMBER}[-{SUBNUMBER}],
+     BUG-{CATEGORY}-{NUMBER}[-{SUBNUMBER}],
+     DEC-{CATEGORY}-{NUMBER}[-{SUBNUMBER}]
+   – Példa: REQ-AGENT-001, REQ-BROWSER-042, REQ-CODE-015-01, REQ-AGENT-001-02
+   – Példa: BUG-AGENT-042, BUG-CODE-015-02
+   – Példa: DEC-AGENT-001 (döntés/kérdés/ellentmondás)
+   – Category: specifikációs fájl neve vagy feature/domain alapján
+     (pl. agent-system.md → AGENT)
+   – Subnumber (opcionális): alkövetelmények azonosításához
+   – Rövid, nagybetűs, aláhúzás nélküli azonosító (max 15 karakter)
+
+2. KÓD LÉTREHOZÁSA ÉS HASZNÁLATA
+   – Minden követelmény és alkövetelmény kap egyedi kódot
+   – Formátum specifikációban:
+     `### Feature Name ✅ [REQ-AGENT-001]` vagy `## Section Name ❌ [REQ-AGENT-002]`
+   – **Blokkonként csak egy kód**: szekciónként/listánként egy feature kód
+   – **Státusz emoji kötelező**: Minden kódhoz tartozik egy státusz emoji:
+     * ✅ (kész): Teljes mértékben implementálva – **CSAK AKKOR**, ha minden implementációs
+       elemnél szerepel a requirement kód, ÉS ellenőriztük és reviewztuk
+     * 🔍 (implemented but not reviewed/not tested): Implementálva, de nincs reviewzva/tesztelve
+     * ❌ (missing): Még nincs implementálva
+     * 🔄 (specifications changed): Specifikáció változott, implementáció nem frissült
+     * ⚠️ (specification incomplete): Specifikáció nem teljes
+     * ❓ (unknown): Ismeretlen státusz (default)
+   – Emoji a kód előtt: `✅ [REQ-AGENT-001]`, `❌ [REQ-AGENT-003]`, stb.
+   – Szekvenciális számozás: minden új követelmény a következő számot kapja
+   – Ugyanaz a követelmény több helyen = ugyanaz a kód
+   – Ne készítsünk indexeket, direktbe használjuk őket
+   – **Eltávolított feature kódok**: script-tel a group feature kódjára írjuk
+
+3. KÓD HASZNÁLATA IMPLEMENTÁCIÓKBAN
+   – Minden implementációban kötelezően hivatkozzunk a követelmény kódjára
+   – Hivatkozás formátumok:
+     `// REQ-AGENT-001: Implementáció`, `@requirement REQ-AGENT-001`,
+     `Implements: REQ-AGENT-001`
+   – A fájl tetején vagy a releváns függvény/class felett szerepeljen a kód
+   – Több követelmény esetén: `// REQ-AGENT-001, REQ-AGENT-001-01: ...`
+   – **KRITIKUS SZABÁLY**: ✅ státusz CSAK akkor kerülhet be, ha MINDEN implementációs elemnél
+     szerepel a requirement kód, ÉS ellenőriztük és reviewztuk az adott requirement-et
+   – DEC kód használata: ellentmondások, kérdések, döntések esetén
+   – DEC kód → kötelezően `__documentations/BUSINESS_QUESTIONS.md`-be is
+
+4. KÓD KARBANTARTÁS
+   – Új követelmény/bug/döntés: új kód generálása szekvenciális számmal
+   – Törölt követelmény/bug/döntés: kódot NEM használjuk újra (archiváljuk)
+   – Módosított követelmény: ugyanazt a kódot használjuk, dokumentáljuk a változást
+   – Refactoring: kódok megmaradnak, csak implementáció változik
+   – Dokumentációkban (CHANGELOG, DECISIONS, TODO, BACKLOG) hivatkozzunk a kódokra
+   – DEC kód → kötelezően `__documentations/BUSINESS_QUESTIONS.md`-be is
+
+---
+
+FELADAT
+Készíts egy részletes, hierarchikus fejlesztési tervet a következő feladathoz
+(próbáljunk meg sorban haladni a pending feladatokon), amely:
+1. Teljes mértékben a specifikációra épül
+2. Figyelembe veszi és beemeli a már elkészült elemeket
+3. Kifejezetten AI-végrehajtásra optimalizált (Cursor-kompatibilis)
+4. Minimalizálja az iterációs hibákat és a kontextusvesztést
+5. Garantálja, hogy minden új lépés kapcsolódik az összes korábbi lépéshez
+6. Minden lépés után kötelezően frissít (update) és dokumentál
+
+A FEJLESZTÉSI TERV SZERKEZETE
+A tervet fázisokra és lépésekre bontva add meg:
+
+TERV FÁJL LOKÁCIÓ
+– A tervet kötelezően egy `*.plan.md` fájlba kell menteni a `__documentations/plans/` mappába
+– Fájlnév formátum: `{sorszam}-{projekt-nev-vagy-cel}.plan.md`
+  (pl. `1.0-agent-system-update.plan.md`, `2.0-feature-x-implementation.plan.md`)
+– **Kötelező sorszámozás**: A fájlnév MINDIG tört szám formátumban kezdődik
+  (pl. 1.0, 1.1, 2.0, 122.0.12)
+– **Verziószámozás szabályok**:
+  – A sorszámozás időben folyamatosan növekszik (1.0, 1.1, 1.2, 2.0, stb.)
+  – A verziószámot egyeztetni kell, ez lesz a projekt verziószáma
+  – **Aktív verzió**: Az elkészült utolsó terv sorszáma
+  – **Review fájlok**: `.rev.md` kiterjesztéssel, az aktív verzióval
+    (pl. `{verzió}-Gap_Analysis.rev.md`)
+  – **Dokumentáció fájl elnevezési konvenciók**:
+    * Dokumentációkhoz: `{verzió}-{Pascal_Snake_Case}.doc.md`
+      (pl. `1.0-Completed_Plan_1_VSCode_Setup.doc.md`)
+    * Review-khoz: `{verzió}-{Pascal_Snake_Case}.rev.md`
+      (pl. `17.0-Gap_Analysis_Project_Agent.rev.md`)
+    * Changelog fájlokhoz: `Changelog_{verzió}.doc.md`
+      (pl. `Changelog_1.0.doc.md`, `Changelog_2.0.doc.md`)
+    * Changelog archív: `Changelog_{verzió}_Archive.doc.md`
+    * Pascal_Snake_Case formátum: szavak nagy betűvel, aláhúzás választja el
+  – **Package.json verzió**: `2.{dokumentációs-verzió}.0` formátum
+    (pl. aktív verzió 17.0 → package.json `2.17.0`)
+  – Új terv létrehozásakor: ellenőrizd a `package.json` verziószámot
+– Ha a mappa nem létezik, létre kell hozni
+
+TERV FÁJL FORMÁTUM
+– Minden PHASE és STEP elején kötelező státusz emoji:
+  * ⏳ (pending): Még nem kezdődött el
+  * 🔄 (in-progress): Jelenleg folyamatban van
+  * ✅ (completed): Befejezve
+  * ❓ (unknown): Ismeretlen státusz (default)
+– A terv végén kötelezően legyen egy "TO-DO LISTA" szekció checkboxokkal
+– Checkboxok: `- [ ] STEP N.M: Rövid leírás` (pending), `- [x] STEP N.M: Leírás` (completed)
+
+PHASE N ⏳
+– Cél (mit old meg ez a fázis a teljes projekt szempontjából)
+– Függőségek (mely korábbi fázisokra/lépésekre épül)
+– Érintett fájlok / modulok
+– Dokumentációs fókusz (mely doc fájlok bővülnek ebben a fázisban)
+– Státusz: ⏳ / 🔄 / ✅ / ❓
+
+STEP N.M ⏳
+– Konkrét végrehajtási feladat (egyetlen jól körülhatárolt művelet)
+– Pontos elvárt kimenet (fájl, funkció, interface, logika)
+– Kapcsolódás:
+  – milyen korábbi lépésekre épít
+  – mit készít elő a következő lépésekhez
+– AI-utasítás stílus: egyértelmű, parancsszerű, félreérthetetlen
+– Érintett fájlok (konkrét útvonalakkal)
+– Módosítás típusa (create/update/refactor)
+– Követelmény kódok: mely REQ-XXX-YYY kódokkal kapcsolatos
+– Előtte olvasd el: `__specifications/technical-specifications.md`
+– Státusz: ⏳ / 🔄 / ✅ / ❓
+
+---
+
+KÖTELEZŐ LÉPÉSVÉGI RUTIN (MINDEN STEP VÉGÉN)
+A STEP végén mindig add meg külön blokkban, ebben a sorrendben:
+
+1) INTEGRITÁS-ELLENŐRZÉS
+– Checklist:
+  – build / futás állapota
+  – típus- és interfész-konzisztencia
+  – logikai összhang a specifikációval
+  – regressziók kizárása
+  – lint/test (ha van)
+– Mit kell az AI-nak ellenőriznie, mielőtt továbblép
+
+2) UPDATE (ÁLLAPOTFRISSÍTÉS)
+– Mit készült el ebben a lépésben (tételesen)
+– Mi változott a korábbiakhoz képest (delta)
+– Nyitott kérdések / kockázatok (ha van)
+– Következő lépés előfeltételei (mit kell igazolni, hogy indulhasson)
+
+3) DOKUMENTÁCIÓ (KÖTELEZŐ, INKREMENTÁLIS)
+– Minden lépés után frissíts/bővíts dokumentációt
+– Dokumentációs szabályok:
+  – rövid, követhető, strukturált
+  – mindig tükrözze az aktuális valós állapotot
+  – minden döntés kapjon 1-2 soros indoklást
+  – a későbbi bővíthetőség legyen explicit
+  – **Ne használj dátumokat a dokumentációkban!** Sorszámozás tört számokkal
+    (pl. 1.0, 1.1, 1.2, 122.0.12)
+  – **Dokumentáció fájl elnevezési konvenciók**:
+    * `{verzió}-{Pascal_Snake_Case}.doc.md` (dokumentáció)
+    * `{verzió}-{Pascal_Snake_Case}.rev.md` (review)
+    * `Changelog_{verzió}.doc.md` (changelog, verziónként külön fájl)
+    * `Changelog_{verzió}_Archive.doc.md` (changelog archív)
+
+– Minimum doc output minden STEP végén:
+  – `__documentations/CHANGELOG.md`
+    (completed item-ek archívuma, max 750 sor, túl hosszúnál → Changelog_{verzió}.doc.md)
+  – `__documentations/BUGS.md`
+    (aktív bug tracking – ha releváns bug változás történt)
+  – `__documentations/ARCHITECTURE.md`
+    (modulok, adatáramlás, felelősségek)
+  – `__documentations/DECISIONS.md`
+    (döntésnapló: mi, miért, alternatívák)
+  – `__documentations/INTEGRITY.md`
+    (mit és hogyan ellenőrzünk rendszeresen)
+  – `__documentations/BUSINESS_QUESTIONS.md`
+    (DEC kódokhoz kapcsolt üzleti kérdések)
+  – `__documentations/dev/{verzió}-{Pascal_Snake_Case}.doc.md`
+    (session-önkénti report)
+  – `__specifications/TODO.md`
+    (aktív feladatok státusz frissítése, TODO formátum szerint)
+  – `__specifications/BACKLOG.md`
+    (intake státusz frissítése, BACKLOG formátum szerint)
+
+– A tervben minden STEP-hez írd le pontosan, mely fájl(ok) frissülnek
+(max line length: 150)
+
+---
+
+VIBE CODING OPTIMALIZÁLÁS
+A terv:
+– kis, egymásra épülő lépésekből álljon
+– kerülje az egyszerre túl sok fájl módosítását
+– preferálja az inkrementális, validálható előrehaladást
+– minden lépés végén legyen integritás + update + dokumentáció
+– minden lépés explicit módon hivatkozzon:
+  – a specifikáció megfelelő pontjára (REQ-XXX-YYY kóddal)
+  – a korábbi lépések releváns kimeneteire
+  – a dokumentáció releváns fejezeteire
+
+VÉGSŐ ÖSSZEGZÉS
+A terv végén készíts:
+– teljes projekt-összefoglalót (architektúra, modulok, adatáramlás)
+– lépés-függőségi térképet (hogyan épül egymásra minden)
+– AI-végrehajtási ajánlást: milyen sorrendben, tempóban érdemes futtatni Cursorban
+– Dokumentációs indexet: mely doc hol van, és melyik lépés írja/bővíti
+– Frissítsd az előrehaladást és a feladatlistát (archiváld a completed elemeket)
+
+TO-DO LISTA
+A terv végén kötelezően legyen egy "TO-DO LISTA" szekció checkboxokkal:
+– Formátum: `- [ ] STEP N.M: Rövid leírás` (pending), `- [x] STEP N.M: Leírás` (completed)
+– A lista tartalmazza az összes PHASE-t és STEP-et hierarchikusan
+– Példa:
+  ```
+  ## TO-DO LISTA
+
+  ### PHASE 1: Alapok
+  - [ ] STEP 1.1: Alapvető struktúra létrehozása
+  - [ ] STEP 1.2: Konfiguráció beállítása
+
+  ### PHASE 2: Implementáció
+  - [ ] STEP 2.1: Fő funkció implementálása
+  - [x] STEP 2.2: Tesztek írása
+  ```
+
+---
+
+KIMENETI FORMA
+– A tervet kötelezően `*.plan.md` fájlba a `__documentations/plans/` mappába
+– Strukturált, jól tagolt markdown
+– Kódot csak ott adj meg, ahol a terv megértéséhez szükséges
+– Nincs felesleges magyarázat, csak végrehajtható precízió
+– Max fájlhossz: 750 sor, max sorhossz: 150 karakter
+  (Ha bármi ennél hosszabb → refaktorálás több fájlba)
+– Minden PHASE és STEP elején kötelező státusz emoji (⏳ / 🔄 / ✅ / ❓)
+– A terv végén kötelezően "TO-DO LISTA" szekció checkboxokkal
+
+---
+
+EMLÉKEZTETŐK (MINDEN STEP-NÉL ELLENŐRIZD)
+(DONT RUN OR COMPILE THE APPLICATION, ask the user to do so)
+– Frissítsd a specifikációkat! (`__specifications/` fájlok)
+– Frissítsd a dokumentációkat! (`__documentations/` fájlok)
+– Használj requirement kódokat! (REQ-XXX-YYY, BUG-XXX-YYY, DEC-XXX-YYY)
+– Verziószámozás dátumok helyett! (1.0, 1.1, 2.0)
+– Fájlelnevezési konvenciók betartása:
+  * `{verzió}-{Pascal_Snake_Case}.doc.md` (dokumentáció)
+  * `{verzió}-{Pascal_Snake_Case}.rev.md` (review)
+  * `Changelog_{verzió}.doc.md` (changelog, verziónként külön)
+  * `Changelog_{verzió}_Archive.doc.md` (changelog archív)
+– TODO/BACKLOG/BUGS/CHANGELOG státuszok frissítése minden releváns STEP végén!
+– Completed TODO/BUG → CHANGELOG archive + eredeti entry törlés!
+
+KÖTELEZŐ REFERENCIA FÁJLOK (minden projektben):
+__specifications/main.md
+__specifications/technical-specifications.md
+__specifications/TODO.md
+__specifications/BACKLOG.md
+__documentations/CHANGELOG.md
+__documentations/BUGS.md
+__documentations/ARCHITECTURE.md
+__documentations/DECISIONS.md
+__documentations/INTEGRITY.md
+__documentations/BUSINESS_QUESTIONS.md

@@ -1,0 +1,6 @@
+---
+description:  apply when we are facing errors, issues or bugs.
+alwaysApply: false
+---
+
+When we are trying to solve an issue, an error or a bug, we always need to check the related specifications first about what is the required best case.

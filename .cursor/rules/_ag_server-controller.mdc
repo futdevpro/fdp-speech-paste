@@ -1,0 +1,6 @@
+---
+globs: *.controller.ts
+alwaysApply: false
+---
+
+- In controllers when setting up endpoints, in tasks declarations we should write the absolute minimum that is needed here, and create the actual logical implementations within control services or data services.

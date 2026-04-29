@@ -1,0 +1,64 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Follow these
+[cursor-rules](cursor-rules.md)
+
+Strictly keep and follow patterns from the existing codebase!
+Always use, and align to @futdevpro/* packages
+Never import from "*/../../NPM-packages/*", use '@futdevpro/*' instead
+when suggesting, always try to read both main opened screen, since they are usually releated
+Always try to follow the existing patterns for code and formatting (dont forget to break long lines and use existing naming patterns).
+Always follow patterns of existing projects! (tech stack, naming, codes, everything!)
+We need no quick fixes only the best solution possible using Dy*
+Always look around for existing solutions before implementing new one
+Always look for samples in codebase
+Always maintain a "Single Source of Truth" for data management: each data domain should have ONE dedicated data-service that owns and manages that data. All components, services, and modules must consume data through these centralized data-services instead of duplicating queries, fetches, or data transformations. Never create parallel data access paths — if a data-service already handles a resource, extend it rather than creating a new one.
+Always implement fixes and features that are highlighted or requested by the user
+Always use existing scripts and architecture.
+Never try to modify configs if the user didn't asked specially to do so.
+Never create new test file types other than is already used in the project.
+Never create javascript files!
+Never use powershell commands, or anything that is not on the allowed list. (allowed: npm, pnpm, cd, npx)
+Don't use custom scripts, use the npm scripts provided in the current project.
+The npm scripts are complex, no need to run build and test separately, run only "npm test" (or check the scripts first)
+(IF you want to run multiple scripts you need to use ";" instead of "&&", eg.: cd .. ; npm test instead of cd .. && npm test)
+All projects have a _specifications folder in root, where we describe the expected functionality of how certain parts of the application should work (AI should never modify these files)
+All projects can have a __documentations folder in root, where we create documentations about what we've done in previous sessions (AI should always create very brief but describing documentations after each bigger implementation or refactor) (date flag these)
+
+
+my common requirements:
+- use existing enums, interfaces, services, etc. if possible
+- follow the existing patterns sctriclty; 
+    namings, file namings, module structure, error handlings, logging, testing, documentation, etc.
+- create enums instead of string literals
+- create interfaces for sub-objects
+- create interfaces for every object that is used more than once
+- one file should have only one export (only allowed more for DataModels and its dataParams)
+- enums should be; keyNameIsCamelCase = 'value-is-kebab-case'
+- break long lines at 120 characters
+- EVERY let, const, function, arrow function, and all inputs should have types. (always use types, dont create "as" casters)
+- 'as' casts should NEVER be used (only in very unique cases), (if 'as' casters are inevitable and unleavable then that indicates a serious issue)
+- if a file is longer than 500 lines, it should be considered for a refactor (main service can be ~1000 lines)
+- create static util service for services that are not needs connection to other services
+- add code documentation for every function, class, interface, enum, etc. (skip inputs)
+- add inline code documentation for every logical step, decision, and other important parts of the code
+- create sub-folders for more than 3 files with the same group (same system part)
+- every method needs more than 3 inputs should use a single object input instead of an argument list.
+- when passing or declaring objects, always write both key and value, never shorthand from local variable
+- use time constants for times from fsm eg: second, minute, hour, day, week
+- use "string[]" instead of "Array<string>"
+- use shortest, simplest codes eg: "if (inputResponse?.missingInformation?.flag) {" instead of "if (inputResponse && inputResponse.missingInformation && inputResponse.missingInformation.flag === true) {", or "if (!count) {" instead of "if (count === 0) {"
+- never create new index files for modules
+- put main methods in try catch (eg methods that are called from controllers)
+- prefer async and promise-based solutions over Observables and subscribe; use async/await and Promise where it fits, avoid RxJS subscribe when a one-shot async flow is enough.
+- No backward compatibility. No legacy support. Refactor all affected code. Do not keep migration layers, shims, or transitional code. Breaking changes allowed.
+
+- avoid using import() or require() methods, put the imports at the top of the file
+
+- the documentation should be in Hungarian 
+  - use Hunglish, use English words for technical terms, element names and programming concepts to maintain clarity and consistency with code implementation
+    - add "-" between english words and hungarian (affixation), eg: "figyelünk a channel-re"
+

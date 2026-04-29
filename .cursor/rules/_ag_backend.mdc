@@ -1,0 +1,16 @@
+---
+description:  when creating backend development
+alwaysApply: false
+---
+# Backend Development Guidelines
+
+## Project Structure
+- Follow the structure defined in [Backend Project Structure](backend-structure.md)
+
+## Error Handling
+- Use try-catch blocks for ALL operations
+- Implement proper error logging
+- Use standardized error codes (see [Error Code Pattern](error_code_pattern.md))
+- Handle all edge cases
+- Validate all inputs
+

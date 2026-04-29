@@ -1,0 +1,40 @@
+---
+description: when creating front-end implementations
+alwaysApply: false
+---
+# FDP FronEnd development Guide
+
+## Tech Stack
+- Use Angular latest version
+- Use Tailwind for SCSS Styles
+- Use the following tech stack: use Angular, Typescript, tailwind, DyNX_, DyFM_, DyNM_, FDP_, FDPNX_
+
+## Angular
+
+## Project Structure
+- Follow the structure defined in [Frontend Project Structure](frontend-structure.md)
+
+### Components
+- After 4+ rows, always create separate HTML file
+
+### Typescript
+- Use Signals
+  - For Signal properties use "_$" postfix
+- For Subjects use "_S" postfix
+- For BehaviourSubjects use "_BS" postfix
+- For Observables use "$" postfix
+- Use async methods
+- ng methods as ngOnInit should never be a promise since they won't wait for async functions
+- Don't implement ngOnInit if not needed/used.
+- for any buttons we should use dynamo new button
+- For data handlings, use data handlers and data services across multiple components whenever we need to handle data.
+
+### HTML
+- NEVER EVER use methods in HTML templates for getting data
+- Put empty lines between HTML elements in the same level
+- Use "@if" syntax in HTML instead of "*ngIf" for Angular
+- Use Tailwind classes and only create SCSS if needed, e.g. for animated elements
+- In HTML templates you should never ever use functions to display data or evaluate HTML tag rendering methods only allowed for event triggers! Use signal computed values or pipes for evaluations and pipings.
+
+## Naming
+- Read and follow [Naming](_ag_naming.mdc) conventions

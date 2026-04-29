@@ -1,0 +1,7 @@
+---
+description: Apply if the user states a "it should do/work like this/that"
+alwaysApply: false
+---
+
+# Global planning and execution policy
+- mindig amikor a user olyat vagy olyasmit, mond, hogy "ennek úgy kéne működnie, hogy ..." annak bele kell kerülni a specifikációba

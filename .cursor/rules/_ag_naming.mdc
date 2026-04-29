@@ -1,0 +1,116 @@
+---
+description:  when naming new- elements, classes and else.
+alwaysApply: false
+---
+# FDP Naming Conventions [FDP-Dev-Naming]
+
+## Overview
+This document outlines the standard naming conventions for FDP projects.
+
+## General Rules
+- Use PascalCase for:
+  - Classes
+  - Interfaces
+  - Types
+  - Enums
+- Use camelCase for:
+  - Variables
+  - Constants
+  - Methods
+- Use descriptive, meaningful names
+
+## Module Prefixes
+- Each element must be prefixed with its module's 2-3 letter identifier
+- Helps with:
+  - Navigation
+  - Module identification
+  - Preventing naming conflicts
+- Example: `FE_Page_Component` for FlowEditor module
+
+## Element Types
+Format: Element Name (File Pattern) -> Class Postfix
+
+### Model Elements
+#### Basic Models
+- Data Model (*.data-model.ts) -> _DataModel
+- Control Model (*.control-model.ts) -> _ControlModel
+- Interface (*.interface.ts) -> _Interface
+
+#### Special Models
+- Params (*-params.control-model.ts) -> _Params_ControlModel
+- Settings (*-settings.control-model.ts) -> _Settings_ControlModel
+- Settings Constants (*-settings.const.ts) -> _settings_const
+- Data Params (DyFM_DataModel_Params in *.data-model.ts) -> _DataModel_Params
+
+### FullStack Elements
+- Type (*.type-enum.ts) -> _Type
+- ServiceBase (*.service-base.ts) -> _ServiceBase
+- ControlService (*.control-service.ts) -> _ControlService
+- ApiService (*.api-service.ts) -> _ApiService
+
+### Frontend Elements
+- Module (*.module.ts) -> _Module
+- RoutingModule (*.routing-module.ts) -> _RoutingModule
+- DataService (*.data-service.ts) -> _DataService
+- Component (*.component.ts) -> _Component
+- Directive (*.directive.ts) -> _Directive
+- Pipe (*.pipe.ts) -> _Pipe
+- Route (*.route-enum.ts) -> _Route
+- FullRoute (in route-enum file) -> _FullRoute
+- CSS classes: kebab-case
+- CSS variables: --kebab-case
+- Event handlers: handleEventName
+- Boolean variables: is prefix only (e.g., isActive, isEnabled)
+
+### Backend Elements
+- Controller (*.controller.ts) -> _Controller
+- DataService (*.data-service.ts) -> _DataService
+- SocketServerService (*.socket-server-service.ts) -> _SocketServerService
+- SocketClientService (*.socket-client-service.ts) -> _SocketClientService
+- EmailService (*.email-service.ts) -> _EmailService
+
+## File Naming
+- One class per file
+- File name matches class name
+- Test files: class-name.spec.ts
+- Interface files: interface-name.interface.ts
+- Type files: type-name.type.ts
+
+## Naming Examples
+```typescript
+// Module
+jóska-pista.module.ts -> JóskaPista_Module
+
+// Routing Module
+jóska-pista.routing-module.ts -> JóskaPista_RoutingModule
+
+// Services
+jp-vlmi.api-service.ts -> JP_Vlmi_ApiService
+jp-vlmi.data-service.ts -> JP_Vlmi_DataService
+jp-vlmi.control-service.ts -> JP_Vlmi_ControlService
+jp-vlmi.service-base.ts -> JP_Vlmi_ServiceBase
+
+// Models
+jp-vlmi.data-model.ts -> JP_Vlmi_DataModel
+jp-vlmi.control-model.ts -> JP_Vlmi_ControlModel
+jp-vlmi.interface.ts -> JP_Vlmi_Interface
+jp-vlmi-params.control-model.ts -> JP_Vlmi_Params_ControlModel
+jp-vlmi-settings.control-model.ts -> JP_Vlmi_Settings_ControlModel
+jp-vlmi-settings.const.ts -> JP_vlmi_settings_const
+
+// Enums
+jp-vlmi.type-enum.ts -> JP_Vlmi_Type
+jp-vlmi.route-enum.ts -> JP_Vlmi_Route
+
+// Frontend Specific
+handleUserClick() // Event handler
+isUserActive // Boolean variable
+.user-profile // CSS class
+--primary-color // CSS variable
+```
+
+## File Structure
+- Module elements should be in the module's directory
+- Shared elements should be in the shared module
+- Use appropriate type folders (_services, _components, etc.)
+- Follow the project structure guidelines for placement 
