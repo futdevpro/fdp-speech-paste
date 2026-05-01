@@ -66,3 +66,5 @@ temp_audio_*.mp3
 # Test files
 test_*.wav
 test_*.mp3 
+# CI/CD log artifacts (downloaded by 'fdp cicd-result-full')
+logs/
