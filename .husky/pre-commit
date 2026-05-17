@@ -1,0 +1,2 @@
+dc sync-fdp-deps --patch-only --stage
+dc bump-version

@@ -25,7 +25,8 @@
     
     "start-complete": "powershell -ExecutionPolicy Bypass -File start_complete_system.ps1",
     
-    "start-all": "npm run prep && npm run start-complete"
+    "start-all": "npm run prep && npm run start-complete",
+    "prepare": "husky"
   }
 }
 
