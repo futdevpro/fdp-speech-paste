@@ -68,3 +68,6 @@ test_*.wav
 test_*.mp3 
 # CI/CD log artifacts (downloaded by 'fdp cicd-result-full')
 logs/
+
+# Internal workspace agent rules - never tracked in this public repository
+.cursor/
