@@ -71,3 +71,6 @@ logs/
 
 # Internal workspace agent rules - never tracked in this public repository
 .cursor/
+
+# Pending Changes Crusade (2026-10-18): a node_modules soha nem resze a reponak (owner D3)
+node_modules/
